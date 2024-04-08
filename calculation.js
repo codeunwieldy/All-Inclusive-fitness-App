@@ -30,8 +30,9 @@ brmBtn.addEventListener('click', function() {
     const outputInput = document.getElementById('output');
     
     // Convert weight from lbs to kg if necessary
+    let WeightCalc;
     if (unitSelect.value === 'lbs') {
-        weightInput.value = (parseFloat(weightInput.value) * 0.453592).toFixed(2);
+        WeightCalc = (parseFloat(weightInput.value) * 0.453592).toFixed(2);
     }
 
     // Convert height from feet and inches to cm if necessary
@@ -45,7 +46,7 @@ brmBtn.addEventListener('click', function() {
     }
     
     // Calculate BMR
-    const output = calorieCalc(parseFloat(weightInput.value), heightInCm, parseFloat(ageInput.value));
+    const output = calorieCalc(parseFloat(WeightCalc), heightInCm, parseFloat(ageInput.value));
     
     // Display output
     console.log(output.toFixed(2));
