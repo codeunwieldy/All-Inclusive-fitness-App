@@ -48,7 +48,7 @@
 }
 body {
     color: black;
-    background-color:#2B2D31;
+    background-color:#171719;
     margin: 0 ;
     padding: 0 ;
 }
@@ -134,7 +134,7 @@ main {
 }
 .nav-link:hover{
     filter:grayscale(0%)opacity(1) brightness(100%);
-    background: #430bec;
+    background: #5D09C9;
     color:rgb(190,201,200);
     
 
