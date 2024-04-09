@@ -43,14 +43,17 @@
     font-size: 16px;
     font-family: 'Barlow Semi Condensed';
     --text-primary: white;
-    --bg-primary: rgb(23,38,87);
+    --bg-primary: #29088b
 
 }
 body {
     color: black;
-    background-color:white;
+    background-color:#2B2D31;
     margin: 0 ;
     padding: 0 ;
+}
+.textmainpg{
+    color: rgb(207, 206, 206);
 }
 body::-webkit-scrollbar {
     width:.25rem;
@@ -126,12 +129,12 @@ main {
     color :rgb(190,201,200);
     text-decoration:none;
     filter: grayscale(100%) opacity(.7) brightness(50%);
-    transition:500ms;
+    transition:200ms;
 
 }
 .nav-link:hover{
     filter:grayscale(0%)opacity(1) brightness(100%);
-    background: rgb(48, 65, 122);
+    background: #430bec;
     color:rgb(190,201,200);
     
 
