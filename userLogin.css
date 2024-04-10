@@ -351,6 +351,7 @@ header {
     border-radius: 5px;
     
    }
+
    .UserName-root-outline:hover,
     .password-root-outline:hover{
         border:1px solid rgba(0, 0, 0, 0.815);
@@ -360,7 +361,7 @@ header {
     
  
 .email-input, .password-input{
-   font-size: 1rem;
+    font-size: 1rem;
     font-family: 'Raleway', sans-serif,Helvetica,Arial;
     letter-spacing: inherit;
     color: currentColor;
@@ -375,7 +376,13 @@ header {
     animation-duration: 10ms;
     padding: 16.5px 14px;
     outline: none;
+    
 }
+
+.email-input::placeholder,.password-input::placeholder {
+    fill-opacity: unset;
+    color: #000000;
+  }
 .email-input:focus,
 .password-input:focus{
         border:1px solid rgba(44, 12, 190, 0.815);
