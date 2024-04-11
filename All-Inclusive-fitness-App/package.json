@@ -1,0 +1,26 @@
+{
+  "name": "all-inclusive-fitness-app",
+  "version": "1.0.0",
+  "description": "",
+  "type":"module",
+  "main": "calculation.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codeunwieldy/All-Inclusive-fitness-App.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/codeunwieldy/All-Inclusive-fitness-App/issues"
+  },
+  "homepage": "https://github.com/codeunwieldy/All-Inclusive-fitness-App#readme",
+  "dependencies": {
+    "chart.js": "^4.4.2",
+    "express": "^4.19.2",
+    "mysql2": "^3.9.4"
+  }
+}
