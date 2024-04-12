@@ -23,3 +23,33 @@ passwordInput.addEventListener('input', function() {
         passwordInput.style.fontWeight = 'bold'; // Make text bold when input is not empty
     } 
 });
+
+
+const createUser = async ({first_name,last_name,username,email,password,height,age,weight})=>{
+    const body = {
+        first_name,last_name,username,email,password,height,age,weight
+    }
+    
+    try{
+    const create = await fetch('localhost/signUp',{
+        method:'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body:JSON.stringify(body)
+
+
+    });
+        if(!create.ok){
+            throw new Error('Network response was not ok');
+        }
+        
+    }
+    catch(error){
+        console.error('There was a problem with the fetch operation:', error);
+    }
+
+
+};      
+
+

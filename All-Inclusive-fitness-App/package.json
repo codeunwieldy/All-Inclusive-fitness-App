@@ -2,10 +2,10 @@
   "name": "all-inclusive-fitness-app",
   "version": "1.0.0",
   "description": "",
-  "type":"module",
+  "type": "module",
   "main": "calculation.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "npx nodemon apps.js"
   },
   "repository": {
     "type": "git",
@@ -20,7 +20,12 @@
   "homepage": "https://github.com/codeunwieldy/All-Inclusive-fitness-App#readme",
   "dependencies": {
     "chart.js": "^4.4.2",
+    "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "express-session": "^1.18.0",
     "mysql2": "^3.9.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
   }
 }
