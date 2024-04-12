@@ -51,5 +51,41 @@ const createUser = async ({first_name,last_name,username,email,password,height,a
 
 
 };      
+const login_email = document.getElementsByClassName('email-input').value
+const login_pswrd = document.getElementsByClassName('email-password').value
+const logInBtn = document.getElementsByClassName('Login');
+logInBtn.addEventListener('click', async ()=>{
+   const result = await logIN(login_email,login_pswrd);
+    
+
+})
+
+
+const logIN = async ({login_email,login_pswrd})=>{
+    const body = {
+        login_email,login_pswrd
+    }
+    
+    try{
+    const create = await fetch('localhost/LogIN',{
+        method:'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body:JSON.stringify(body)
+
+
+    });
+        if(!create.ok){
+            throw new Error('Network response was not ok');
+        }
+        
+    }
+    catch(error){
+        console.error('There was a problem with the fetch operation:', error);
+    }
+
+
+};      
 
 
