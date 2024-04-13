@@ -1,7 +1,7 @@
 import express from 'express';
 import session from 'express-session';
 
-import{fetchData, creatProfile} from 'database.js';
+import{fetchData, createProfile,getProfile,deleteProfile,updateProfile,putCalories,deleteCalories,getAllClories,putWeight,deleteWeight,getAllWeight} from 'database.js';
 
 const app = express();
 
@@ -17,7 +17,7 @@ app.post("/signUp", async(req,res) =>{
     const { first_name, last_name, username, email, password, height, age, weight } = req.body;
     
     try {
-        const user = await creatProfile(first_name, last_name, username, email, password, height, age, weight);
+        const user = await createProfile(first_name, last_name, username, email, password, height, age, weight);
         // Set session data after successful profile creation
         req.session.user_id = user.user_id;
         req.session.first_name = user.first_name; 
@@ -47,8 +47,30 @@ app.get("/userprofile", async(req,res) =>{
     const {username,email,password,height,weight,age} = req.body
     
 });
+app.post("/signUp", async(req,res) =>{
+    const { data } = req.body;
+    
+    try {
+        const user = await updateProfile(user_id, data);
+        
+        res.status(201).send(user); //sending back the new updated user info
+    } catch (error) {
+        console.error('Error in updating  profile:', error);
+        // Send error response
+        res.status(500).json({ error: 'Error in updating profile' });
+    }
+});
 app.get("/analytics", async(req,res) =>{
-    const {username,email,password,height,weight,age} = req.body
+    const {request} = req.body //res.body is an object or array that contains the {UserID: ,table1: ,dataType1: , table2: , dataType2: }
+    try {
+        const twoTableData = await get2ForAnalytics(UserID,request)
+        
+        res.status(201).send(twoTableData); //sending back the new updated user info
+    } catch (error) {
+        console.error('Error in getting analytics:', error);
+        // Send error response
+        res.status(500).json({ error: 'Error in getting analytics' });
+    }
     
 });
 app.post("/analytics", async(req,res) =>{
