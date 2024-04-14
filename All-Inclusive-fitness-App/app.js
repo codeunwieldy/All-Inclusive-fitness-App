@@ -1,14 +1,23 @@
 import express from 'express';
 import session from 'express-session';
+import RedisStore from 'connect-redis';
+import redis from 'redis';
 
 import{fetchData, createProfile,getProfile,deleteProfile,updateProfile,putCalories,deleteCalories,getAllClories,putWeight,deleteWeight,getAllWeight} from 'database.js';
 
 const app = express();
 
-app.use(express.jsob());
+app.use(express.json());
 
-app.use(session({
-    secret: process.env.SECRET_KEY, // Used to sign the session ID cookie
+const redisClient = redis.createClient({      //if something isnt workign around here i will have to use a cookie parser.
+    password: process.env.redisPswrd, 
+    host: 'redis-10269.c329.us-east4-1.gce.cloud.redislabs.com',
+    port: 10269
+});
+const store = new RedisStore({ client: redisClient, ttl: 36000 }); // TTL set to 10 hours (36000 seconds)
+app.use(session({                                       //get the session id with req.sessionID
+    store: store,
+    secret: process.env.SECRET_KEY,
     resave: false,
     saveUninitialized: false
 }));
@@ -19,6 +28,7 @@ app.post("/signUp", async(req,res) =>{
     try {
         const user = await createProfile(first_name, last_name, username, email, password, height, age, weight);
         // Set session data after successful profile creation
+        
         req.session.user_id = user.user_id;
         req.session.first_name = user.first_name; 
         req.session.last_name = user.last_name;
@@ -63,7 +73,7 @@ app.post("/signUp", async(req,res) =>{
 app.get("/analytics", async(req,res) =>{
     const {request} = req.body //res.body is an object or array that contains the {UserID: ,table1: ,dataType1: , table2: , dataType2: }
     try {
-        const twoTableData = await get2ForAnalytics(UserID,request)
+        const twoTableData = await get2ForAnalytics(request)
         
         res.status(201).send(twoTableData); //sending back the new updated user info
     } catch (error) {

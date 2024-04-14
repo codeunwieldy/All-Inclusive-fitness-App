@@ -15,7 +15,7 @@ export async function fetchData(userId) {
         console.error('Error executing query:', error);
     }
 }
-
+//////////////////////////////////////////
 export async function getProfile(id) {
      try {
          const [rows] = await pool.query(`SELECT * FROM userprofile WHERE user_id = ?`, [id]);
@@ -37,8 +37,11 @@ export async function getProfile(id) {
          throw new Error('Error creating profile');
      }
  }
- export async function deleteProfile(user_id) {
+ //////////////////////////////////////
+ export async function deleteProfile(request) {
      try {
+          const{sessionID} = request
+          const user_id = await getSessionUserID(sessionID);
          const [result] = await pool.query(`
          DELETE FROM userprofile WHERE user_id = ?`, [user_id]);
           // return somthing here put in later
@@ -47,8 +50,10 @@ export async function getProfile(id) {
          throw new Error('Error deleting profile');
      }
  }
- export async function updateProfile(user_id, data) { //this recives the needed values to update as an object 
+ export async function updateProfile(request) { //this recives the needed values to update as an object thats comes in the sessionID and the data:data1,data2..
      try {
+         const{sessionID,data} = request;
+         const user_id = await getSessionUserID(sessionID);
          // Construct the SET clause dynamically based on the provided data
          const setClause = Object.keys(data).map(key => `${key} = ?`).join(', ');
  
@@ -65,71 +70,125 @@ export async function getProfile(id) {
      }
  }
  
- export async function putCalories(calories,userID) {
+ export async function putCalories(calories,request) {
      try {
-         const [result] = await pool.query(`
+          const{sessionID} = request;
+          const UserID = await getSessionUserID(sessionID);
+          const [result] = await pool.query(`
          INSERT INTO caloriedata (calories,UserID) 
-         VALUES (?,?)`, [calories,userID]);
+         VALUES (?,?)`, [calories,UserID]);
          //maybe i should return the insertID here idk
      } catch (error) {
          console.error('Error executing query:', error);
          throw new Error('Error adding calories');
      }
  }
- export async function deleteCalories(insertID, userID) {
+ export async function deleteCalories(insertID, request) {
      try {
+          const{sessionID} = request;
+          const UserID = await getSessionUserID(sessionID);
          const [result] = await pool.query(`
-         DELETE FROM caloriedata WHERE calorie_id = ? AND UserID = ?`, [insertID,userID]);
+         DELETE FROM caloriedata WHERE calorie_id = ? AND UserID = ?`, [insertID,UserID]);
      // return somthing here put in later
      } catch (error) {
          console.error('Error executing query:', error);
          throw new Error('Error creating profile');
      }
  }
- export async function getAllClories(userID) {
+ export async function getAllCalories(request) {
      try {
+          const{sessionID} = request;
+          const UserID = await getSessionUserID(sessionID);
          const [result] = await pool.query(`
-         SELECT * from caloriedata WHERE UserID = ? `, [userID]);
+         SELECT * from caloriedata WHERE UserID = ? `, [UserID]);
          return result[0]; //returns hte calorie_id,calories,calorie_date and UserID
      } catch (error) {
          console.error('Error executing query:', error);
          throw new Error('Error creating profile');
      }
  }
- export async function putWeight(weight,userID) {
+ export async function putWeight(weight,request) {
      try {
+          const{sessionID} = request;
+          const UserID = await getSessionUserID(sessionID);
          const [result] = await pool.query(`
          INSERT INTO weightupdates (Weight,UserID) 
-         VALUES (?,?)`, [weight,userID]);
+         VALUES (?,?)`, [weight,UserID]);
          //maybe i should return the insertID here idk
      } catch (error) {
          console.error('Error executing query:', error);
          throw new Error('Error adding weight');
      }
  }
- export async function deleteWeight(insertID, userID) {
+ export async function deleteWeight(insertID, request) {
      try {
+          const{sessionID} = request;
+          const UserID = await getSessionUserID(sessionID);
          const [result] = await pool.query(`
-         DELETE FROM weightupdates WHERE weight_id = ? AND UserID = ?`, [insertID,userID]);
+         DELETE FROM weightupdates WHERE weight_id = ? AND UserID = ?`, [insertID,UserID]);
      // return somthing here put in later
      } catch (error) {
          console.error('Error executing query:', error);
          throw new Error('Error deleting weight data');
      }
  }
- export async function getAllWeight(userID) {
+ export async function getAllWeight(request) {
      try {
+          const{sessionID} = request;
+          const UserID = await getSessionUserID(sessionID);
          const [result] = await pool.query(`
-         SELECT * from weightupdates WHERE UserID = ? `, [userID]);
+         SELECT * from weightupdates WHERE UserID = ? `, [UserID]);
          return result[0]; //returns the UserID weight updateDate and weight_id
      } catch (error) {
          console.error('Error executing query:', error);
          throw new Error('Error getting weight data');
      }
  }
+
+ export async function putLifts(weight,request) {
+     try {
+          const{sessionID} = request
+         const UserID = await getSessionUserID(sessionID);
+         const [result] = await pool.query(`
+         INSERT INTO lifts (exercise_type,UserID) 
+         VALUES (?,?)`, [weight,UserID]);
+         //maybe i should return the insertID here idk
+     } catch (error) {
+         console.error('Error executing query:', error);
+         throw new Error('Error adding lift');
+     }
+ }
+
+ export async function deleteLifts(insertID,request) {
+     try {
+          const{sessionID} = request
+         const UserID = await getSessionUserID(sessionID);
+         const [result] = await pool.query(`
+         DELETE FROM weightupdates WHERE weight_id = ? AND UserID = ?`, [insertID,UserID]); 
+         
+         //maybe i should return the insertID here idk 
+     } catch (error) {
+         console.error('Error executing query:', error);
+         throw new Error('Error deleting lift');
+     }
+ }
+ export async function getAllLifts(request) {
+     try {
+          const{sessionID} = request
+          const UserID = await getSessionUserID(sessionID);
+         const [result] = await pool.query(`
+         SELECT * from lifts WHERE UserID = ? `, [UserID]);
+         return result[0]; //returns the UserID weight updateDate and weight_id
+     } catch (error) {
+         console.error('Error executing query:', error);
+         throw new Error('Error getting lifts data');
+     }
+ }
  export async function get2ForAnalytics(request) { //request is an object or array that contains the {UserID: ,table1,dataType1: , table2, dataType2: }
      try {
-          const {UserID,table1,dataType1,table2,dataType2} = request
+          const {sessionID,table1,dataType1,table2,dataType2} = request
+           // Retrieve user ID associated with the session ID from your session store (e.g., Redis)
+          const UserID = await getSessionUserID(sessionID); /// need to make this
           // Construct the SQL query string
         const queryString = `
         SELECT t1.*, t2.*
