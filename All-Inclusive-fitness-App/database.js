@@ -1,4 +1,6 @@
 import mysql from 'mysql2/promise'; 
+import dotenv from 'dotenv';
+dotenv.config();
 
 const pool = mysql.createPool({
      host: 'localhost',
@@ -15,6 +17,14 @@ export async function fetchData(userId) {
         console.error('Error executing query:', error);
     }
 }
+export async function findUser(email){
+     try {
+          const result = await pool.query(`SELECT * FROM userprofile WHERE email = ? LIMIT 1;`,[email]);
+           return result[0][0];
+       } catch (error) {
+           console.error('Error executing query:', error);
+       }
+}
 //////////////////////////////////////////
 export async function getProfile(id) {
      try {
@@ -25,6 +35,19 @@ export async function getProfile(id) {
          throw new Error('Error retrieving profile');
      }
  }
+ export async function createProfile(email, password) { //just for testing
+     try {
+         const [result] = await pool.query(`
+         INSERT INTO userprofile (email, passwrd) 
+         VALUES (?, ?)`, [email, password]);
+         const id = result.insertId;
+         return getProfile(id);
+     } catch (error) {
+         console.error('Error executing query:', error);
+         throw new Error('Error creating profile');
+     }
+ }
+ /*
  export async function createProfile(first_name, last_name, username, email, password, height, age, weight) {
      try {
          const [result] = await pool.query(`
@@ -36,7 +59,7 @@ export async function getProfile(id) {
          console.error('Error executing query:', error);
          throw new Error('Error creating profile');
      }
- }
+ }*/
  //////////////////////////////////////
  export async function deleteProfile(request) {
      try {
@@ -113,6 +136,9 @@ export async function getProfile(id) {
           const UserID = await getSessionUserID(sessionID);
          const [result] = await pool.query(`
          INSERT INTO weightupdates (Weight,UserID) 
+         VALUES (?,?)`, [weight,UserID]);
+         const [resultprofile] = await pool.query(`
+         INSERT INTO userprofile (Weight,user_id) 
          VALUES (?,?)`, [weight,UserID]);
          //maybe i should return the insertID here idk
      } catch (error) {

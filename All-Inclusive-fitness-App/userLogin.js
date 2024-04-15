@@ -31,7 +31,7 @@ const createUser = async ({first_name,last_name,username,email,password,height,a
     }
     
     try{
-    const create = await fetch('localhost/signUp',{
+    const create = await fetch('http://localhost:5000/signUp',{
         method:'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -51,23 +51,24 @@ const createUser = async ({first_name,last_name,username,email,password,height,a
 
 
 };      
-const login_email = document.getElementsByClassName('email-input').value
-const login_pswrd = document.getElementsByClassName('email-password').value
-const logInBtn = document.getElementsByClassName('Login');
+
+const logInBtn = document.querySelector('.Login');
 logInBtn.addEventListener('click', async ()=>{
-   const result = await logIN(login_email,login_pswrd);
+    const login_email = document.querySelector('.email-input').value
+    const login_pswrd = document.querySelector('.password-input').value
+    const result = await logIN(login_email,login_pswrd);
     
 
 })
 
 
-const logIN = async ({login_email,login_pswrd})=>{
+const logIN = async (email,password)=>{
     const body = {
-        login_email,login_pswrd
+        email,password
     }
     
     try{
-    const create = await fetch('localhost/LogIN',{
+    const create = await fetch('http://localhost:5000/logIn',{
         method:'POST',
         headers: {
             'Content-Type': 'application/json'

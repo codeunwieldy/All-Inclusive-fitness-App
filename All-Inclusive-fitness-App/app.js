@@ -1,34 +1,51 @@
 import express from 'express';
+import bcrypt from 'bcryptjs'
 import session from 'express-session';
 import RedisStore from 'connect-redis';
-import redis from 'redis';
+import  redis  from 'redis';
+import dotenv from 'dotenv';
+import cors from 'cors';
+dotenv.config();
 
-import{fetchData, createProfile,getProfile,deleteProfile,updateProfile,putCalories,deleteCalories,getAllClories,putWeight,deleteWeight,getAllWeight} from 'database.js';
+import{fetchData, createProfile,getProfile,deleteProfile,updateProfile,putCalories,deleteCalories,getAllCalories,putWeight,deleteWeight,getAllWeight,findUser} from './database.js';
 
 const app = express();
 
 app.use(express.json());
-
-const redisClient = redis.createClient({      //if something isnt workign around here i will have to use a cookie parser.
-    password: process.env.redisPswrd, 
+app.use(cors());
+/*
+const redisClient = redis.createClient({     
+    password: process.env.REDIS_PSWORD , 
     host: 'redis-10269.c329.us-east4-1.gce.cloud.redislabs.com',
     port: 10269
 });
-const store = new RedisStore({ client: redisClient, ttl: 36000 }); // TTL set to 10 hours (36000 seconds)
+*/
+
+//const store = new RedisStore({ client: redisClient, ttl: 36000 }); // TTL set to 10 hours (36000 seconds)
 app.use(session({                                       //get the session id with req.sessionID
-    store: store,
     secret: process.env.SECRET_KEY,
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    //store: store
 }));
 
+app.get('/',(req,res)=>{
+    req.session.isAuth = true
+    console.log( req.session)
+    res.send('hello session')
+})
+
+
 app.post("/signUp", async(req,res) =>{
-    const { first_name, last_name, username, email, password, height, age, weight } = req.body;
+    const {email, password} = req.body;
     
     try {
-        const user = await createProfile(first_name, last_name, username, email, password, height, age, weight);
+
+        const hashedPsw = await bcrypt.hash(password,10)
+
+        const user = await createProfile(email, hashedPsw); //go back and put in everything
         // Set session data after successful profile creation
-        
+        req.session.isAuth = true;
         req.session.user_id = user.user_id;
         req.session.first_name = user.first_name; 
         req.session.last_name = user.last_name;
@@ -40,7 +57,7 @@ app.post("/signUp", async(req,res) =>{
         req.session.weight = user.weight;
 
         // Send response
-        res.status(201).end(); //send the 201 back with empty body
+        res.status(201).redirect('http://127.0.0.1:5500/All-Inclusive-fitness-App/index.html'); 
     } catch (error) {
         console.error('Error in creating profile:', error);
         // Send error response
@@ -48,8 +65,45 @@ app.post("/signUp", async(req,res) =>{
     }
 });
 
-app.get("/logIn", async(req,res) =>{
-    const {username,email,password,height,weight,age} = req.body
+
+
+app.post("/logIn", async(req,res) =>{
+    const {email,password} = req.body
+    try {
+        const user = await findUser(email)
+        console.log(user);
+        if(!user){
+            return res.redirect('http://127.0.0.1:5500/All-Inclusive-fitness-App/userLogIn.html')
+        }
+        const passwordString = String(password);
+        const userPasswrdString = String(user.passwrd);
+        const isMatch = await bcrypt.compare(passwordString,userPasswrdString)   //look at stack over flow chahe length of password in database
+        console.log(password);
+        console.log(user.passwrd)
+        console.log('ismatch: ',isMatch);
+        if(!isMatch){
+            return res.redirect('http://127.0.0.1:5500/All-Inclusive-fitness-App/userLogin.html')
+        }
+        
+        // Set session data after successful profile creation
+        req.session.isAuth = true;
+        req.session.user_id = user.user_id;
+        req.session.first_name = user.first_name; 
+        req.session.last_name = user.last_name;
+        req.session.username = user.username;
+        req.session.email = user.email;
+        req.session.passwrd = user.passwrd;
+        req.session.height = user.height;
+        req.session.age = user.age;
+        req.session.weight = user.weight;
+
+        // Send response
+        res.status(201).redirect('http://127.0.0.1:5500/All-Inclusive-fitness-App/index.html'); 
+    } catch (error) {
+        console.error('Error in creating profile:', error);
+        // Send error response
+        res.status(500).json({ error: 'Error in logging in ' });
+    }
 
 });
 
@@ -57,7 +111,7 @@ app.get("/userprofile", async(req,res) =>{
     const {username,email,password,height,weight,age} = req.body
     
 });
-app.post("/signUp", async(req,res) =>{
+app.post("/update", async(req,res) =>{
     const { data } = req.body;
     
     try {
@@ -91,7 +145,7 @@ app.post("/analytics", async(req,res) =>{
 
 app.use((err,req,res,next)=>{
     console.error(err.stack)
-    res.seatus(500).send('something went wrong')
+    res.status(500).send('something went wrong')
 })
 
 
