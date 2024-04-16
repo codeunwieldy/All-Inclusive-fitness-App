@@ -80,7 +80,8 @@ const logIN = async (email,password)=>{
         if(!create.ok){
             throw new Error('Network response was not ok');
         }
-        
+        const redirectUrl = await create.text();
+        window.location.href = redirectUrl;
     }
     catch(error){
         console.error('There was a problem with the fetch operation:', error);

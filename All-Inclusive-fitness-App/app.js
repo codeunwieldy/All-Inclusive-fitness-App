@@ -2,7 +2,8 @@ import express from 'express';
 import bcrypt from 'bcryptjs'
 import session from 'express-session';
 import RedisStore from 'connect-redis';
-import  redis  from 'redis';
+import pkg from 'redis';
+const { createClient } = pkg;
 import dotenv from 'dotenv';
 import cors from 'cors';
 dotenv.config();
@@ -12,21 +13,42 @@ import{fetchData, createProfile,getProfile,deleteProfile,updateProfile,putCalori
 const app = express();
 
 app.use(express.json());
-app.use(cors());
-/*
-const redisClient = redis.createClient({     
-    password: process.env.REDIS_PSWORD , 
-    host: 'redis-10269.c329.us-east4-1.gce.cloud.redislabs.com',
-    port: 10269
-});
-*/
+app.use(cors({
+    origin: 'http://127.0.0.1:5500', 
+  credentials: true }
+));
 
-//const store = new RedisStore({ client: redisClient, ttl: 36000 }); // TTL set to 10 hours (36000 seconds)
-app.use(session({                                       //get the session id with req.sessionID
+
+let redisClient; 
+const initializeRedis = async () => {
+    redisClient = createClient({
+        password: process.env.REDIS_PSWORD,
+        socket: {
+            host: 'redis-10269.c329.us-east4-1.gce.cloud.redislabs.com',
+            port: 10269
+        }
+    });
+
+    try {
+        await redisClient.connect();
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+initializeRedis();
+
+const redisStore = new RedisStore({ client: redisClient, prefix: "myapp:" });
+app.use(session({
     secret: process.env.SECRET_KEY,
     resave: false,
     saveUninitialized: false,
-    //store: store
+    rolling: false,
+    store: redisStore,
+    cookie: {
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours in milliseconds
+        // Other cookie options can be set here as needed
+    }
 }));
 
 app.get('/',(req,res)=>{
@@ -51,13 +73,12 @@ app.post("/signUp", async(req,res) =>{
         req.session.last_name = user.last_name;
         req.session.username = user.username;
         req.session.email = user.email;
-        req.session.passwrd = user.passwrd;
         req.session.height = user.height;
         req.session.age = user.age;
         req.session.weight = user.weight;
 
         // Send response
-        res.status(201).redirect('http://127.0.0.1:5500/All-Inclusive-fitness-App/index.html'); 
+        res.status(201).send("http://127.0.0.1:5500/All-Inclusive-fitness-App/index.html"); 
     } catch (error) {
         console.error('Error in creating profile:', error);
         // Send error response
@@ -66,23 +87,22 @@ app.post("/signUp", async(req,res) =>{
 });
 
 
-
 app.post("/logIn", async(req,res) =>{
     const {email,password} = req.body
     try {
         const user = await findUser(email)
         console.log(user);
         if(!user){
-            return res.redirect('http://127.0.0.1:5500/All-Inclusive-fitness-App/userLogIn.html')
+            return res.send('http://127.0.0.1:5500/All-Inclusive-fitness-App/userLogIn.html')
         }
         const passwordString = String(password);
-        const userPasswrdString = String(user.passwrd);
-        const isMatch = await bcrypt.compare(passwordString,userPasswrdString)   //look at stack over flow chahe length of password in database
+       console.log((user.passwrd).trim());
+        const isMatch = await bcrypt.compare(passwordString,String(user.passwrd).trim())   //look at stack over flow chahe length of password in database
         console.log(password);
         console.log(user.passwrd)
         console.log('ismatch: ',isMatch);
         if(!isMatch){
-            return res.redirect('http://127.0.0.1:5500/All-Inclusive-fitness-App/userLogin.html')
+            return res.send('http://127.0.0.1:5500/All-Inclusive-fitness-App/userLogin.html')
         }
         
         // Set session data after successful profile creation
@@ -98,7 +118,7 @@ app.post("/logIn", async(req,res) =>{
         req.session.weight = user.weight;
 
         // Send response
-        res.status(201).redirect('http://127.0.0.1:5500/All-Inclusive-fitness-App/index.html'); 
+        res.status(201).send("http://127.0.0.1:5500/All-Inclusive-fitness-App/index.html"); 
     } catch (error) {
         console.error('Error in creating profile:', error);
         // Send error response

@@ -30,6 +30,8 @@ const signUp = async (email,password)=>{
         if(!create.ok){
             throw new Error('Network response was not ok');
         }
+        const redirectUrl = await create.text();
+            window.location.href = redirectUrl;  ///////this methode works horray
         
     }
     catch(error){
