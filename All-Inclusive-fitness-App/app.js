@@ -136,6 +136,16 @@ app.post("/update", async(req,res) =>{
     
     try {
         const user = await updateProfile(user_id, data);
+        req.session.isAuth = true;
+        req.session.user_id = user.user_id;
+        req.session.first_name = user.first_name; 
+        req.session.last_name = user.last_name;
+        req.session.username = user.username;
+        req.session.email = user.email;
+        req.session.passwrd = user.passwrd;
+        req.session.height = user.height;
+        req.session.age = user.age;
+        req.session.weight = user.weight;
         
         res.status(201).send(user); //sending back the new updated user info
     } catch (error) {
