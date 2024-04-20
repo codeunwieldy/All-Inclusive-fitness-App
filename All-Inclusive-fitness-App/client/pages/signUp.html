@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+    <link rel="stylesheet" href="../styles/userLogin.css">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Face</title>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    <div class="viewBox">
+    <header class="header">
+        <div class="upperHeader">
+            <div class="upperHeader-flex">
+                <a class="pagelogo" href="">OMNIBUS</a>
+                <div class="spreader-1"></div>
+                <div class="LogSig-flex-C">
+                    <a class="Log-top"href=""><span class="Log-top-sp">Log In</span></a>
+                    <a class="Sig-top" href=""><span class="Sig-top-sp">Sign Up</span></a>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="lowerHeader">
+            <div class="toolbarInner">
+                <div class="toolbarGrid">
+                    <div class="toolbarGrid-GridItem"><a class="toolbar-a" href="">Calculators</a></div>
+                    <div class="toolbarGrid-GridItem"><a class="toolbar-a" href="">Exercises</a></div>
+                    <div class="toolbarGrid-GridItem"><a class="toolbar-a" href="">Calender</a></div>
+                    <div class="toolbarGrid-GridItem"><a class="toolbar-a" href="">Analytics</a></div>
+                    <div class="toolbarGrid-GridItem"><a class="toolbar-a" href="">Community</a></div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="root-MP-wrap">
+    <div class="root-Middle-page">
+        <div class="loginContainer">
+        
+        <div class="login-IC">
+            <div class="UM-login"><h1 class="h1Mess">Sign Up</h1 ></div>
+            <div class="Mui-box-root">
+                <div class="alert-incorrect" role="alert">
+                    <div class="MUIerrorsvg"><svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-1cw4hi4" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="ErrorOutlineIcon"><path d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"></path></svg></div>
+                    <div class="MUI-alert-message">Incorrect username or password. Please try again</div>
+                </div>
+            <div class="UserName-root">
+                <label class="label-for-email" data-shrink="false"for="email"><span class="sp-email-label"></span></label>
+                <div class="UserName-root-outline">
+                    <input class="email-input" placeholder="Email Address"autocomplete="email" type="text">
+                </div>
+
+            </div>
+            <p class="alert-for-email"></p>
+            <div class="Password-root">
+                <label class="label-for-password" data-shrink="false"for="password"><span class="sp-password-label"></span></label>
+                <div class="password-root-outline">
+                    <input class="password-input" placeholder="Password"autocomplete="password" type="text">
+                </div>
+
+            </div>
+            <p class="alert-for-password"></p>
+            <p class="ForgotPW" href=""><a class="fg-psword"href="">Forgot Password?</a></p>
+            </div>
+            <div class="loginOptions">
+                <button class="Login"><span class="sp-login">Create Account</span></button>
+                <p class="or">or</p>
+                <button class="googleLI">
+                    <span class="iconGG"><svg class="ggsvg" focusable="false" aria-hidden="true" viewBox="0 0 24 24"><path d="M19.0711 4.92893C18.0408 3.89861 16.7977 3.1059 15.429 2.60627C14.0602 2.10664 12.5988 1.91216 11.147 2.03644C9.69527 2.16073 8.28819 2.60077 7.02428 3.32578C5.76037 4.05078 4.67016 5.04324 3.82996 6.23368L6.10143 7.83686C6.70803 6.97739 7.49513 6.26086 8.40765 5.73742C9.32016 5.21398 10.336 4.89628 11.3842 4.80655C12.4323 4.71682 13.4874 4.85723 14.4756 5.21795C15.4638 5.57868 16.3613 6.151 17.1051 6.89486L19.0711 4.92893Z" fill="#EA4335"></path><path d="M3.83148 6.23153C2.84897 7.62282 2.23811 9.24201 2.05681 10.9356C1.87551 12.6291 2.12979 14.3409 2.79553 15.9087L5.3546 14.822C4.87395 13.6901 4.69037 12.4542 4.82126 11.2315C4.95215 10.0088 5.39318 8.83978 6.10252 7.8353L3.83148 6.23153Z" fill="#FBBC05"></path><path d="M2.79207 15.9005C3.43992 17.4299 4.45853 18.7739 5.75591 19.811C7.05328 20.8481 8.58855 21.5457 10.2231 21.8409C11.8576 22.136 13.5399 22.0194 15.1181 21.5015C16.6962 20.9836 18.1205 20.0807 19.2624 18.8745L17.2432 16.9632C16.4189 17.8341 15.3906 18.4859 14.2512 18.8598C13.1118 19.2337 11.8972 19.3179 10.7171 19.1049C9.53702 18.8918 8.42859 18.3881 7.49192 17.6393C6.55524 16.8906 5.81983 15.9203 5.35209 14.8161L2.79207 15.9005Z" fill="#33A852"></path><path d="M22 11H13V14H18.9372C18.8808 14.1956 18.8161 14.3891 18.7431 14.5799C18.4043 15.4654 17.8944 16.2755 17.2425 16.964L19.2613 18.8756C20.1642 17.922 20.8705 16.7999 21.3397 15.5734C21.7763 14.4323 21.9999 13.2215 22 12.0012V11Z" fill="#4687F5"></path></svg></span>
+                    <span class="cont-w-GG">Continue with Google</span>
+                </button>
+                <button class="Facebook">
+                    <span class="iconFB"><svg class="fbsvg" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="FacebookIcon"><path d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2m13 2h-2.5A3.5 3.5 0 0 0 12 8.5V11h-2v3h2v7h3v-7h3v-3h-3V9a1 1 0 0 1 1-1h2V5z"></path></svg></span>
+                    <span class="cont-w-FB">Continue with Facebook</span>
+                </button>
+
+            </div>
+        </div>
+    
+    
+</div>
+    <footer class="loginFooter"></footer>
+</div>
+<script src="../utils/signUp.js"></script>
+</body>
+</html>

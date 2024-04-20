@@ -1,0 +1,25 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "type":"module",
+  "main": "app.js",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "connect-redis": "^7.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "mysql2": "^3.9.6",
+    "nodemon": "^3.1.0",
+    "redis": "^4.6.13"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "dev": "nodemon app.js database.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
