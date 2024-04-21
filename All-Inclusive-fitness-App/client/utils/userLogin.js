@@ -36,7 +36,9 @@ const createUser = async ({first_name,last_name,username,email,password,height,a
         headers: {
             'Content-Type': 'application/json'
         },
-        body:JSON.stringify(body)
+        body:JSON.stringify(body),
+        credentials: "include",
+        
 
 
     });
@@ -73,7 +75,9 @@ const logIN = async (email,password)=>{
         headers: {
             'Content-Type': 'application/json'
         },
-        body:JSON.stringify(body)
+        body:JSON.stringify(body),
+        credentials: "include",
+        
 
 
     });

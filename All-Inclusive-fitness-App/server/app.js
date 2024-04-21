@@ -12,11 +12,13 @@ import{fetchData, createProfile,getProfile,deleteProfile,updateProfile,putCalori
 
 const app = express();
 
-app.use(express.json());
-app.use(cors({
-    origin: 'http://127.0.0.1:5500', 
-  credentials: true }
-));
+
+
+const corsOptions = {
+    origin: ['http://127.0.0.1:5500'],  
+    credentials: true,
+};
+app.use(cors(corsOptions));
 
 
 let redisClient; 
@@ -43,13 +45,18 @@ app.use(session({
     secret: process.env.SECRET_KEY,
     resave: false,
     saveUninitialized: false,
-    rolling: false,
+    rolling: true,
     store: redisStore,
     cookie: {
-        maxAge: 24 * 60 * 60 * 1000, // 24 hours in milliseconds
-        // Other cookie options can be set here as needed
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+        httpOnly: true, // Prevents client-side JavaScript from accessing the cookie
+        path: '/',
+        
     }
 }));
+
+app.use(express.json());
+
 
 app.get('/',(req,res)=>{
     req.session.isAuth = true
