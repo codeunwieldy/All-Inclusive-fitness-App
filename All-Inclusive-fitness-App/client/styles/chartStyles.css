@@ -1,0 +1,15 @@
+.chart-container {
+    width: 80%;
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 1rem;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  @media only screen and (max-width: 600px) {
+    .chart-container {
+      width: 95%;
+    }
+  }

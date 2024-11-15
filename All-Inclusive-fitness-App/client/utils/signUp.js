@@ -30,8 +30,12 @@ const signUp = async (email,password)=>{
         if(!create.ok){
             throw new Error('Network response was not ok');
         }
-        const redirectUrl = await create.text();
-            window.location.href = redirectUrl;  ///////this methode works horray
+        
+        
+        const data = await create.json();
+        const{token, redirectUrl} = data
+        localStorage.setItem('token',token)
+        window.location.href = redirectUrl;  
         
     }
     catch(error){

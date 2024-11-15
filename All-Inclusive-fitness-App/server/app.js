@@ -6,7 +6,11 @@ import pkg from 'redis';
 const { createClient } = pkg;
 import dotenv from 'dotenv';
 import cors from 'cors';
+import { generateToken } from './jwtUtils.js';
+import {authenticateJWT} from './authMiddleware.js'
+
 dotenv.config();
+
 
 import{fetchData, createProfile,getProfile,deleteProfile,updateProfile,putCalories,deleteCalories,getAllCalories,putWeight,deleteWeight,getAllWeight,findUser} from './database.js';
 
@@ -20,14 +24,14 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-
+/*
 let redisClient; 
 const initializeRedis = async () => {
     redisClient = createClient({
         password: process.env.REDIS_PSWORD,
         socket: {
-            host: 'redis-10269.c329.us-east4-1.gce.cloud.redislabs.com',
-            port: 10269
+            host: 'redis-11822.c15.us-east-1-2.ec2.redns.redis-cloud.com',
+            port: 11822
         }
     });
 
@@ -37,6 +41,7 @@ const initializeRedis = async () => {
         console.error(error);
     }
 };
+
 
 initializeRedis();
 
@@ -54,6 +59,7 @@ app.use(session({
         
     }
 }));
+*/
 
 app.use(express.json());
 
@@ -74,18 +80,16 @@ app.post("/signUp", async(req,res) =>{
 
         const user = await createProfile(email, hashedPsw); //go back and put in everything
         // Set session data after successful profile creation
-        req.session.isAuth = true;
-        req.session.user_id = user.user_id;
-        req.session.first_name = user.first_name; 
-        req.session.last_name = user.last_name;
-        req.session.username = user.username;
-        req.session.email = user.email;
-        req.session.height = user.height;
-        req.session.age = user.age;
-        req.session.weight = user.weight;
+        const token= generateToken(user);
+        
 
-        // Send response
-        res.status(201).send("http://127.0.0.1:5500/All-Inclusive-fitness-App/client/pages/index.html"); 
+        // Send back the token and the redirect url
+        res.status(201).json({
+            token,  
+            redirectUrl:"http://127.0.0.1:5500/All-Inclusive-fitness-App/client/pages/index.html"
+        })
+        
+        
     } catch (error) {
         console.error('Error in creating profile:', error);
         // Send error response
@@ -109,23 +113,15 @@ app.post("/logIn", async(req,res) =>{
         console.log(user.passwrd)
         console.log('ismatch: ',isMatch);
         if(!isMatch){
-            return res.send('http://127.0.0.1:5500/All-Inclusive-fitness-App/client/pages/userLogin.html')
+            return res.send('http://127.0.0.1:5500/All-Inclusive-fitness-App/client/pages/userLogin.html') //here i should be senting the error to change the html to the front
         }
-        
-        // Set session data after successful profile creation
-        req.session.isAuth = true;
-        req.session.user_id = user.user_id;
-        req.session.first_name = user.first_name; 
-        req.session.last_name = user.last_name;
-        req.session.username = user.username;
-        req.session.email = user.email;
-        req.session.passwrd = user.passwrd;
-        req.session.height = user.height;
-        req.session.age = user.age;
-        req.session.weight = user.weight;
-
-        // Send response
-        res.status(201).send("http://127.0.0.1:5500/All-Inclusive-fitness-App/client/pages/index.html"); 
+        const token= generateToken(user);
+         // Send back the token and the redirect url
+         res.status(201).json({
+            token,  
+            redirectUrl:"http://127.0.0.1:5500/All-Inclusive-fitness-App/client/pages/index.html"
+        })
+       
     } catch (error) {
         console.error('Error in creating profile:', error);
         // Send error response
@@ -143,16 +139,7 @@ app.post("/update", async(req,res) =>{
     
     try {
         const user = await updateProfile(user_id, data);
-        req.session.isAuth = true;
-        req.session.user_id = user.user_id;
-        req.session.first_name = user.first_name; 
-        req.session.last_name = user.last_name;
-        req.session.username = user.username;
-        req.session.email = user.email;
-        req.session.passwrd = user.passwrd;
-        req.session.height = user.height;
-        req.session.age = user.age;
-        req.session.weight = user.weight;
+        const token= generateToken(user);
         
         res.status(201).send(user); //sending back the new updated user info
     } catch (error) {
